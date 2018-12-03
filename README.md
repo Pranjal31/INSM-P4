@@ -5,19 +5,7 @@ INSM allows users to track the path and the length of queues that every
 packet travels through.  To support this functionality, we have written a P4 program that appends an ID and queue length to the header stack of every packet.  At the destination, the sequence of switch IDs correspond to the path, and each ID is followed by the queue length of the port at switch.
 
 We have defined the control plane rules in src/core/sx-commands.txt and the data plane logic is present in src/core/insm.p4
-
-Environment setup
-=================
-1. To compile P4 code, a few dependencies are needed. Some examples are: CMake, GNU autotools, Google Protocol Buffers 3.0 etc. The comprehensive list of dependencies can be found here: (https://github.com/p4lang/p4c#dependencies)
-
-P4 Language Consortium has also published a VM, with all the dependencies pre-installed. 
-The VM Image can be downloaded from: https://drive.google.com/file/d/1b3xZ5Tw7AkG6hGt4WLpi5hXuyJim9Gsw/view?usp=sharing
-
-2. Import the image into VirtualBox and start the VM
-
-3. Clone the INSM-P4 GitHub repository (https://github.com/Pranjal31/INSM-P4.git). Execute in shell:
-   cd INSM-P4/   
-
+ 
 Code Execution
 ==============
 
