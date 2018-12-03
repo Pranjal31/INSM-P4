@@ -4,17 +4,17 @@ Introduction
 INSM allows users to track the path and the length of queues that every
 packet travels through.  To support this functionality, we have written a P4 program that appends an ID and queue length to the header stack of every packet.  At the destination, the sequence of switch IDs correspond to the path, and each ID is followed by the queue length of the port at switch.
 
-We have defined the control plane rules in src/core/sx-commands.txt and the data plane logic is present in src/core/insm.p4
+We have defined the control plane rules in INSM-P4/src/core/sx-commands.txt and the data plane logic is present in INSM-P4/src/core/insm.p4
  
 Code Execution
 ==============
 
-The directory src/core/ contains a P4 program,
+The directory INSM-P4/src/core/ contains a P4 program,
 insm.p4, which implements L3 forwarding as well as prepends the INSM custom headers.
 
 1. In shell, run:
 
-   cd src/core/  
+   cd INSM-P4/src/core/  
    sudo make
   
    This will:
