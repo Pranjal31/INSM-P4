@@ -2,9 +2,7 @@ Introduction
 ============
 
 INSM allows users to track the path and the length of queues that every
-packet travels through.  To support this functionality, we have written a P4 program that appends an ID and queue length to the
-header stack of every packet.  At the destination, the sequence of switch IDs correspond to the path, and each ID is followed by the
-queue length of the port at switch.
+packet travels through.  To support this functionality, we have written a P4 program that appends an ID and queue length to the header stack of every packet.  At the destination, the sequence of switch IDs correspond to the path, and each ID is followed by the queue length of the port at switch.
 
 We have defined the control plane rules in src/core/sx-commands.txt and the data plane logic is present in src/core/insm.p4
 
@@ -23,15 +21,15 @@ Code Execution
 ==============
 
 The directory src/core/ contains a P4 program,
-`insm.p4`, which implements L3 forwarding as well as prepends the INSM custom headers.
+insm.p4, which implements L3 forwarding as well as prepends the INSM custom headers.
 
 1. In shell, run:
 
-  cd src/core/  
-  sudo make
+   cd src/core/  
+   sudo make
   
    This will:
-   * compile 'insm.p4', and
+   * compile insm.p4, and
    * start a Mininet instance with three switches ('s1', 's2', 's3') configured
      in a triangle. There are 5 hosts. 'h1' and 'h11' are connected to 's1'.
      'h2' and 'h22' are connected to 's2' and 'h3' is connected to 's3'.     
@@ -62,7 +60,7 @@ The directory src/core/ contains a P4 program,
    iperf -s -u
    
 
-5. In h1's xterm, send one packet per second to `h2` using send.py
+5. In h1's xterm, send one packet per second to h2 using send.py
    say for 30 seconds:
   
    ./send.py 10.0.2.2 "CSC573 is awesome!" 30
@@ -74,11 +72,11 @@ The directory src/core/ contains a P4 program,
 7. At h2, the INSM header contains sequence of
  switches through which the packet traveled plus the corresponding
  queue depths.  The expected output will look like the following,
- which shows the INSM header, with a `count` of 2, and switch ids
- (`swids`) 2 and 1.  The queue depth at the common link (from s1 to
+ which shows the INSM header, with a count of 2, and switch ids
+ (swids) 2 and 1.  The queue depth at the common link (from s1 to
  s2) is high.
-8. type `exit` to close each xterm window
-9. type 'exit' in the mininet console to close stop mininet
+8. type exit to close each xterm window
+9. type exit in the mininet console to close stop mininet
 
 
 A note about the control plane
@@ -90,13 +88,13 @@ control plane.  When a rule matches a packet, its action is invoked
 with parameters supplied by the control plane as part of the rule.
 
 As part of bringing up the Mininet instance, the
-`make` script will install packet-processing rules in the tables of
-each switch. These are defined in the `sX-commands.txt` files, where
-`X` corresponds to the switch number.
+make script will install packet-processing rules in the tables of
+each switch. These are defined in the sX-commands.txt files, where
+X corresponds to the switch number.
 
-Sample Output
+Sample Packet
 =============
-
+```
 Got a packet
 ###[ Ethernet ]###
   dst       = 00:04:00:02:00:02
@@ -136,7 +134,7 @@ Got a packet
         chksum    = 0x1c7b
 ###[ Raw ]###
            load      = 'CSC573 is awesome!'
-
+```
 
 Cleaning up Mininet
 ===================
