@@ -8,9 +8,8 @@ We have defined the control plane rules in src/core/sx-commands.txt and the data
 
 Environment setup
 =================
-1. To compile P4 code a lot of dependencies are needed including the p4c compiler. Stanford University has published a VM for instructional use, with all 
-the dependencies pre-installed. 
-The VM Image can be downloaded from: https://drive.google.com/file/d/1ACkpD66zoBJHCX2K50OO8-pssJGZhzMr/view?usp=sharing
+1. To compile P4 code a lot of dependencies are needed including the p4c compiler. P4 Language Consortium has published a VM for learning P4, with all the dependencies pre-installed. 
+The VM Image can be downloaded from: https://drive.google.com/file/d/1b3xZ5Tw7AkG6hGt4WLpi5hXuyJim9Gsw/view?usp=sharing
 
 2. Import the image into VirtualBox and start the VM
 
