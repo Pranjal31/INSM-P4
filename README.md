@@ -14,7 +14,7 @@ The VM Image can be downloaded from: https://drive.google.com/file/d/1b3xZ5Tw7Ak
 2. Import the image into VirtualBox and start the VM
 
 3. Clone the INSM repository. Execure in shell:
-   cd INSM/   
+   cd INSM-P4/   
 
 Code Execution
 ==============
