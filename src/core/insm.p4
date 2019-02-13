@@ -203,7 +203,7 @@ control MyEgress(inout headers hdr,
         hdr.swtraces[0].swid = swid;
         hdr.swtraces[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;	// deq_qdepth represents the queue depth for the egress port
 
-        hdr.ipv4.ihl = hdr.ipv4.ihl + 2;
+        hdr.ipv4.ihl = hdr.ipv4.ihl + 2;		// ihl of 1 corresponds to 4 bytes
         hdr.ipv4_option.optionLength = hdr.ipv4_option.optionLength + 8; 
 	hdr.ipv4.totalLen = hdr.ipv4.totalLen + 8;
     }
