@@ -50,6 +50,7 @@ header insm_t {
     bit<16>  count;
 }
 
+/* 8 bytes per switchtrace */
 header switch_t {
     switchID_t  swid;
     qdepth_t    qdepth;
@@ -95,13 +96,13 @@ parser MyParser(packet_in packet,
         packet.extract(hdr.ethernet);
         transition select(hdr.ethernet.etherType) {
             TYPE_IPV4: parse_ipv4;
-            default: accept;
+            default: accept;		/* stop parsing */
         }
     }
 
     state parse_ipv4 {
         packet.extract(hdr.ipv4);
-        verify(hdr.ipv4.ihl >= 5, error.IPHeaderTooShort);
+        verify(hdr.ipv4.ihl >= 5, error.IPHeaderTooShort); 	/* throws error if the predicate fails (ihl < 5) */
         transition select(hdr.ipv4.ihl) {
             5             : accept;
             default       : parse_ipv4_option;
@@ -130,7 +131,7 @@ parser MyParser(packet_in packet,
         meta.parser_metadata.remaining = meta.parser_metadata.remaining  - 1;
         transition select(meta.parser_metadata.remaining) {
             0 : accept;
-            default: parse_swtrace;
+            default: parse_swtrace;	/* a recursive parse */
         }
     }    
 }
@@ -156,13 +157,15 @@ control MyIngress(inout headers hdr,
         mark_to_drop();
     }
     
+    /* the control plane decisions are used by the data plane */
     action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
         standard_metadata.egress_spec = port;
         hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
         hdr.ethernet.dstAddr = dstAddr;
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
-
+    
+    /* table definition in the processing pipeline which is consulted by the control plane */
     table ipv4_lpm {
         key = {
             hdr.ipv4.dstAddr: lpm;
@@ -187,14 +190,18 @@ control MyIngress(inout headers hdr,
 ****************  E G R E S S   P R O C E S S I N G   *******************
 *************************************************************************/
 
+
+/* Why is the data plane implementation of INSM operations a part of Egress processing (and not ingress processing)? 
+Because, egress queue depth is only known after egress port decision has been made */
+
 control MyEgress(inout headers hdr,
                  inout metadata meta,
                  inout standard_metadata_t standard_metadata) {
     action add_swtrace(switchID_t swid) { 
         hdr.insm.count = hdr.insm.count + 1;
-        hdr.swtraces.push_front(1);
+        hdr.swtraces.push_front(1); // so that we can always access the newly added switchtrace using hdr.swtraces[0]
         hdr.swtraces[0].swid = swid;
-        hdr.swtraces[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;
+        hdr.swtraces[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;	// deq_qdepth represents the queue depth for the egress port
 
         hdr.ipv4.ihl = hdr.ipv4.ihl + 2;
         hdr.ipv4_option.optionLength = hdr.ipv4_option.optionLength + 8; 
